@@ -1,0 +1,1 @@
+# folder name .circleci impt naming is where Circleci will look for the config
