@@ -6,7 +6,7 @@ version: 2.1
 # NOTE: tab is important in .yml config file
 orbs: 
   node: circleci/node@5.0.1
-  docker: circleci/docker@2.1.14
+  docker: circleci/docker@2.1.4
 
 # jobs - set of instructions / functions
 jobs:
