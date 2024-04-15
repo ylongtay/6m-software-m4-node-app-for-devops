@@ -1,0 +1,41 @@
+# folder name .circleci impt naming is where Circleci will look for the config
+
+version: 2.1
+
+# orbs - reusable packages for use
+# NOTE: tab is important in .yml config file
+orbs: 
+  node: circleci/node@5.0.1
+  docker: circleci/docker@2.1.14
+
+# jobs - set of instructions / functions
+jobs:
+  build: # job name
+    docker: # environment
+      - image: cimg/node:16.10
+    steps:
+      - checkout
+      - node/install-packages:
+          pkg-manager: npm
+      - run :
+          echo "Installing dependencies..."
+          npm install
+  test:
+    docker:
+      - image: cimg/node:16.10
+    steps:
+      - checkout
+      - node/install-packages:
+          pkg-manager: npm
+      - run :
+          echo "Running tests..."
+          npm run test
+
+# workflow - defines what sequence will the jobs run
+workflows:
+  simple_workflow: # workflow name
+    jobs:
+      - build
+      - test
+          requires:
+            - build
