@@ -36,6 +36,6 @@ workflows:
   simple_workflow: # workflow name
     jobs:
       - build
-      - test
+      - test:
           requires:
-            - build
+            - build # Added so that build is done before test
