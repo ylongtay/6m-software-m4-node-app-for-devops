@@ -6,6 +6,13 @@ orbs:
   node: circleci/node@5.0.1
   docker: circleci/docker@2.1.4
 
+executors: 
+  docker-publisher:
+    environment: 
+      IMAGE_TAG: ylongtay/education-space:v2
+    docker:
+      - image: docker:publish
+
 # jobs - set of instructions / functions
 jobs:
   build: # job name
@@ -28,6 +35,18 @@ jobs:
       - run : |
           echo "Running tests..."
           npm run test
+  build-and-push:
+    build:
+      executor: docker-publisher
+      steps:
+        - checkout
+        - setup_remote_docker
+        - run: |
+            echo "Building Docker image..."
+            docker build --t "${IMAGE_TAG}" .
+        - run: |
+            echo "${DOCKER_PASSWORD}" | docker login --username "${DOCKER_LOGIN}" --password-stdin
+            docker push "${IMAGE_TAG}"
 
 # workflow - defines what sequence will the jobs run
 workflows:
@@ -37,3 +56,6 @@ workflows:
       - test:
           requires:
             - build # Added so that build is done before test
+      - build-and-push:
+          requires:
+            - test
