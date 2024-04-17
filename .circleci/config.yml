@@ -77,3 +77,4 @@ workflows:
       - publish:
           requires:
             - test
+# If commit and push circleci testing will fail - req Docker environment setup
