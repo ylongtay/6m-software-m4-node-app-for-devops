@@ -61,10 +61,10 @@ jobs:
       - docker/check
       - docker/build: #build the image
           image: ylongtay/education-space
-          tag: v2
+          tag: v1.0.1
       - docker/push: #pushes the image to the specified account in the environment variables
           image: ylongtay/education-space
-          tag: v2
+          tag: v1.0.1
 
 
 # workflow - defines what sequence will the jobs run
