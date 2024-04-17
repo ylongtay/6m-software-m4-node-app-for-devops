@@ -1,6 +1,7 @@
 require("dotenv").config();
 const express = require('express')
 const app = express()
+// const bodyParser = require("body-parser");
 
 const print = require("./controller");
 
@@ -13,6 +14,11 @@ app.get("/introduce", (req, res) => {
 
 app.get("/home", (req, res) => {
   res.send("This is the home page");
+});
+
+app.post("/users", (req, res) => {
+  const {name, password, email} = req.body;
+  res.send(`"NAME" = ${name}, "EMAIL" = ${email}`);
 });
 
 app.listen(process.env.PORT, ()=>{
