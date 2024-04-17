@@ -5,6 +5,7 @@ version: 2.1
 orbs: 
   node: circleci/node@5.0.1
   docker: circleci/docker@2.1.4
+  heroku: circleci/heroku@2.0.0
 
 #Try out: Assignment 4.5
 # executors: 
@@ -61,10 +62,26 @@ jobs:
       - docker/check
       - docker/build: #build the image
           image: ylongtay/education-space
+          # Mini activity 3 - add a tag called v1.0.1 and push the tag in docker hub
           tag: v1.0.1
       - docker/push: #pushes the image to the specified account in the environment variables
           image: ylongtay/education-space
           tag: v1.0.1
+
+  deploy:
+    docker:
+      - image: cimg/node:16.10
+    steps:
+      - setup_remote_docker
+      - heroku/install
+      - checkout
+      - run:
+          name: Heroku Container Push
+          command: |
+            heroku container:login
+            heroku container:push web -a  yonglong-ntusctp-devops
+            heroku container:release web -a yonglong-ntusctp-devops
+
 
 
 # workflow - defines what sequence will the jobs run
@@ -79,4 +96,5 @@ workflows:
       - publish:
           requires:
             - test
+      - deploy
 # If commit and push circleci testing will fail - req Docker environment setup
