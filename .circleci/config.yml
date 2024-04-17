@@ -6,12 +6,14 @@ orbs:
   node: circleci/node@5.0.1
   docker: circleci/docker@2.1.4
 
-executors: 
-  docker-publisher:
-    environment: 
-      IMAGE_TAG: ylongtay/education-space:v2
-    docker:
-      - image: docker:publish
+#Try out: Assignment 4.5
+# executors: 
+#   docker-publisher:
+#     environment: 
+#       IMAGE_TAG: ylongtay/education-space:v2
+#     docker:
+#       - image: docker:publish
+#Try out: Assignment 4.5
 
 # jobs - set of instructions / functions
 jobs:
@@ -35,18 +37,33 @@ jobs:
       - run : |
           echo "Running tests..."
           npm run test
-  build-and-push:
-    build:
-      executor: docker-publisher
-      steps:
-        - checkout
-        - setup_remote_docker
-        - run: |
-            echo "Building Docker image..."
-            docker build --t "${IMAGE_TAG}" .
-        - run: |
-            echo "${DOCKER_PASSWORD}" | docker login --username "${DOCKER_LOGIN}" --password-stdin
-            docker push "${IMAGE_TAG}"
+
+  #Try out: Assignment 4.5
+  # build-and-push:
+  #   build:
+  #     executor: docker-publisher
+  #     steps:
+  #       - checkout
+  #       - setup_remote_docker
+  #       - run: |
+  #           echo "Building Docker image..."
+  #           docker build --t "${IMAGE_TAG}" .
+  #       - run: |
+  #           echo "${DOCKER_PASSWORD}" | docker login --username "${DOCKER_LOGIN}" --password-stdin
+  #           docker push "${IMAGE_TAG}"
+  #Try out: Assignment 4.5
+
+  publish: #also known as the build-and-push
+    executor: docker/docker # executor define the execution environment in which the steps of a job will run.
+    steps:
+      - setup_remote_docker
+      - checkout
+      - docker/check
+      - docker/build: #build the image
+          image: ylongtay/education-space:v2
+      - docker/push: #pushes the image to the specified account in the environment variables
+          image: ylongtay/education-space:v2
+
 
 # workflow - defines what sequence will the jobs run
 workflows:
@@ -56,6 +73,7 @@ workflows:
       - test:
           requires:
             - build # Added so that build is done before test
-      - build-and-push:
+      #Mini activity #2 - how to make the publish job execute after the test job?
+      - publish:
           requires:
             - test
