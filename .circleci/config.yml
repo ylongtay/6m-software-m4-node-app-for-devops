@@ -28,6 +28,7 @@ jobs:
       - run : |
           echo "Installing dependencies..."
           npm install
+
   test:
     docker:
       - image: cimg/node:16.10
@@ -89,9 +90,17 @@ workflows:
   simple_workflow: # workflow name
     jobs:
       - build
+          filter: # added for assignment 4.6
+            branches:
+              only:
+                - main
       - test:
           requires:
             - build # Added so that build is done before test
+          filter: # added for assignment 4.6
+            branches:
+              only:
+                - main
       #Mini activity #2 - how to make the publish job execute after the test job?
       - publish:
           requires:
