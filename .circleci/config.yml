@@ -89,15 +89,15 @@ jobs:
 workflows:
   simple_workflow: # workflow name
     jobs:
-      - build
-          filter: # added for assignment 4.6
+      - build:
+          filters: # added for assignment 4.6
             branches:
               only:
                 - main
       - test:
           requires:
             - build # Added so that build is done before test
-          filter: # added for assignment 4.6
+          filters: # added for assignment 4.6
             branches:
               only:
                 - main
