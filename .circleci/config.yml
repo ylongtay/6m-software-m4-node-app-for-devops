@@ -89,7 +89,7 @@ jobs:
 workflows:
   simple_workflow: # workflow name
     jobs:
-      - build
+      - build:
           filter: # added for assignment 4.6
             branches:
               only:
