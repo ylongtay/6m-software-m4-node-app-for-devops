@@ -84,7 +84,7 @@ jobs:
             heroku container:push web -a  yonglong-ntusctp-devops
             heroku container:release web -a yonglong-ntusctp-devops
   
-  Scan:
+  scan:
     docker:
       - image: cimg/node:16.10
     environment: #the environment allows us to create an environment for the job and allows us to create custom environment variables
