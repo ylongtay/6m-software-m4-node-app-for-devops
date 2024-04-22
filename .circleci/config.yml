@@ -3,9 +3,10 @@ version: 2.1
 # orbs - reusable packages for use
 # NOTE: tab is important in .yml config file
 orbs: 
-  node: circleci/node@5.0.1
+  node: circleci/node@5.0.1 # Security vulnerability: Outdated node current is 5.2.0
   docker: circleci/docker@2.1.4
-  heroku: circleci/heroku@2.0.0
+  # heroku: circleci/heroku@2.0.0
+  snyk: snyk/snyk@1.5.0 #compare the node and docker orbs, the snyk orb starts with snyk and it is considered the third party orb
 
 #Try out: Assignment 4.5
 # executors: 
@@ -82,6 +83,19 @@ jobs:
             heroku container:login
             heroku container:push web -a  yonglong-ntusctp-devops
             heroku container:release web -a yonglong-ntusctp-devops
+  
+  Scan:
+    docker:
+      - image: cimg/node:16.10
+    environment: #the environment allows us to create an environment for the job and allows us to create custom environment variables
+      IMAGE_NAME: ylongtay/education-space
+    steps:
+      - checkout
+      - setup_remote_docker
+      - docker/check
+      - run: docker build -t $IMAGE_NAME . #$IMAGE_NAME gets the value from the env we created above
+      - snyk/scan:
+          docker-image-name: $IMAGE_NAME
 
 
 
@@ -92,8 +106,7 @@ workflows:
       - build:
           filters: # added for assignment 4.6
             branches:
-              only:
-                - main
+              only: main #the build job would only run when code changes are pushed to the main (4.7)
       - test:
           requires:
             - build # Added so that build is done before test
@@ -101,11 +114,18 @@ workflows:
             branches:
               only:
                 - main
+      - scan: #the scan job added to workflow (4.7)
+          requires:
+            - build
+          filters:
+            branches:
+              only: main
       #Mini activity #2 - how to make the publish job execute after the test job?
-      - publish:
-          requires:
-            - test
-      - deploy:
-          requires:
-            - publish
+      # - publish:
+      #     requires:
+      #       - test
+      # - deploy:
+      #     requires:
+      #       - publish
 # If commit and push circleci testing will fail - req Docker environment setup
+# Above 7 lines commented out for lesson-4.7
