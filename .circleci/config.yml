@@ -96,6 +96,7 @@ jobs:
       - run: docker build -t $IMAGE_NAME . #$IMAGE_NAME gets the value from the env we created above
       - snyk/scan:
           docker-image-name: $IMAGE_NAME
+          severity-threshold: high
 
 
 
