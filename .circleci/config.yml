@@ -107,7 +107,7 @@ workflows:
       - build:
           filters: # added for assignment 4.6
             branches:
-              only: main #the build job would only run when code changes are pushed to the main (4.7)
+              only: main #the build job would only run when code changes are pushed to the main (lesson 4.7)
       - test:
           requires:
             - build # Added so that build is done before test
